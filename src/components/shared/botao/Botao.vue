@@ -1,54 +1,70 @@
-<!-- alurapic/src/components/shared/botao/Botao.vue -->
 <template>
-    <button class="botao botao-perigo" :type="tipo" @click="disparaAcao()">{{rotulo}}</button>
+    <button @click="disparaAcao()" class="botao" :class="estiloDoBotao" :type="tipo">{{ rotulo }}</button>
 </template>
 
 <script>
+
 export default {
 
-   props: {
-       tipo: {
-           type: String, 
-           required: true
-       },
+    props: {
 
-       rotulo: {
-           type: String, 
-           required: true
-       },
+        tipo: {
+            required: true, 
+            type: String
+        },
 
-       confirmacao: Boolean,
-       estilo: String
-   },
-   methods: {
+        rotulo: {
+            required: true, 
+            type: String
+        }, 
 
-       disparaAcao() {
-           console.log(typeof(this.confirmacao));
-           if(this.confirmacao) {
-               if(confirm('Confirma operacao?')) {
+        confirmacao: Boolean,
+        estilo: String
+
+    },
+
+    methods: {
+
+        disparaAcao() {
+
+            if(this.confirmacao) {
+                if(confirm('Confirma operação?')) {
                     this.$emit('botaoAtivado');
                 }
                 return;
-           }
-           this.$emit('botaoAtivado');
-       }
-   },
+            }
+            this.$emit('botaoAtivado');
+        }
+    },
 
-   computed: {
+    computed: {
 
-       estiloDoBotao() {
+        estiloDoBotao() {
 
-           // se o valor é padrão ou não passou nada para estilo
-           if(this.estilo == 'padrao') return 'botao botao-padrao';
+            if(this.estilo == 'padrao' || !this.estilo) return 'botao-padrao';
+            if(this.estilo == 'perigo') return 'botao-perigo';
+        }
 
-           if(this.estilo == 'perigo') return 'botao botao-perigo';
-       }
-   }
+    }
 }
-</script>    
+</script>
 
-<style scoped lang="sass">
+<style>
+    .botao {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 3px;
+        margin: 10px;
+        font-size: 1.2em;
+    }
 
-    @import './Botao.scss';
+    .botao-perigo {
+        background: firebrick;
+        color: white;
+    }
 
+    .botao-padrao {
+        background: darkcyan;
+        color: white;
+    }
 </style>
