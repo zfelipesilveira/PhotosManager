@@ -1,20 +1,21 @@
 <template>
-  <div >
-
-    <h1 class="centralizado">{{ titulo }}</h1>
-
-    <input type="search" class="filtro" v-on:input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
-
-    <ul class="lista-fotos">
-      <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
-        <meu-painel :titulo="foto.titulo">
-          <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
-          <meu-botao rotulo="remover" tipo="button" @click="remove()"/>
-        </meu-painel>
-      </li>
-    </ul>
-
-  </div>
+    <div>    
+        <h1 class="centralizado" v-meu-transform>Alurapic</h1>
+        <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
+        <ul class="lista-fotos">
+          <li class="lista-fotos-item" v-for="foto in fotosComFiltro">
+              <meu-painel :titulo="foto.titulo">
+                <imagem-responsiva :url="foto.url" :titulo="foto.titulo" v-meu-transform.animate.reverse="15"/>
+                <meu-botao 
+                  rotulo="remover" 
+                  tipo="button" 
+                  :confirmacao="true" 
+                  @botaoAtivado="remove(foto)"
+                  estilo="perigo"/>
+              </meu-painel>
+          </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -68,11 +69,13 @@ export default {
 
   methods: {
 
-    remove() {
-      alert('Precisa saber qual foto remover!');
+     remove(foto) {
+         if(confirm('Confirma?')) {
+             alert(foto.titulo);
+         }
     }
   }
-  
+
 }
 </script>
 <style>
