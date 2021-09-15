@@ -1,39 +1,23 @@
-<!-- alurapic/src/App.vue -->
 <template>
-    <div class="painel">
-        <h2 class="painel-titulo">{{foto.titulo}}</h2>
-            <div class="painel-corpo">
 
-                <img :src="foto.url" :alt="foto.titulo">
+  <div class="painel">
 
-            </div><!-- fim painel-corpo -->
-    </div><!-- fim painel -->
+    <h2 class="painel-titulo">{{ titulo }}</h2>
+    <slot class="painel-conteudo">
+
+    </slot>
+  </div>
 
 </template>
 
 <script>
 
-// agora temos apenas a propriedade `fotos` que é um array que possui dois objetos que possuem as propriedades `url` e `titulo`, cada um com seu valor.
 export default {
-
-  data() {
-    return {
-      titulo: 'Alurapic',
-      fotos: []
-
-    }
-  },
-
-  created() {
-
-    this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())
-      .then(fotos => this.fotos = fotos, err => console.log(err));
-  }
+   props: ['titulo']
 }
 </script>
 
-<style>
+<style scoped>
 
 
   /* estilo do painel */ 
@@ -58,4 +42,10 @@ export default {
     padding: 10px;
     text-transform: uppercase;
   }
+
+  *  {
+    box-shadow: 5px 5px 5px;
+  }
+
+  
 </style>
