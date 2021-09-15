@@ -1,17 +1,21 @@
 <template>
     <div>    
-        <h1 class="centralizado" v-meu-transform>Alurapic</h1>
+        <h1 class="centralizado">Alurapic</h1>
+
+        <!-- novo elemento para exibir mensagens para o usuário -->
+        <p v-show="mensagem" class="centralizado">{{ mensagem }}</p>
+
         <input type="search" class="filtro" @input="filtro = $event.target.value" placeholder="filtre pelo título da foto">
         <ul class="lista-fotos">
-          <li class="lista-fotos-item" v-for="foto in fotosComFiltro">
+          <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
               <meu-painel :titulo="foto.titulo">
                 <imagem-responsiva :url="foto.url" :titulo="foto.titulo" v-meu-transform:scale.animate="1.2"/>
                 <meu-botao 
                   rotulo="remover" 
                   tipo="button" 
+                  estilo="perigo"
                   :confirmacao="true" 
-                  @botaoAtivado="remove(foto)"
-                  estilo="perigo"/>
+                  @botaoAtivado="remove(foto)"/>
               </meu-painel>
           </li>
         </ul>
@@ -20,7 +24,7 @@
 
 <script>
 
-import Painel from '../shared/painel/Painel.vue'
+import Painel from '../shared/painel/Painel.vue';
 import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
 import Botao from '../shared/botao/Botao.vue';
 
@@ -29,19 +33,18 @@ export default {
   components: {
 
     'meu-painel': Painel,
-
-    'imagem-responsiva': ImagemResponsiva,
-
+    'imagem-responsiva': ImagemResponsiva, 
     'meu-botao': Botao
   },
 
   data () {
     return {
-      titulo: 'Alurapic', 
 
       fotos: [],
 
-      filtro: ''
+      filtro: '',
+
+      mensagem: ''
     }
   },
 
@@ -55,27 +58,42 @@ export default {
       } else {
         return this.fotos;
       }
-
     }
-  },
 
-  created() {
-
-    this.$http
-      .get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())
-      .then(fotos => this.fotos = fotos, err => console.log(err));
   },
 
   methods: {
 
-     remove(foto) {
-         if(confirm('Confirma?')) {
-             alert(foto.titulo);
-         }
-    }
-  }
+    remove(foto) {
 
+      // removido parte do endereço aqui
+
+      this.$http
+        .delete(`v1/fotos/${foto._id}`)
+        .then(
+          () => {
+            let indice = this.fotos.indexOf(foto);
+            this.fotos.splice(indice, 1);
+            this.mensagem = 'Foto removida com sucesso'
+          }, 
+          err => {
+            this.mensagem = 'Não foi possível remover a foto';
+            console.log(err);
+          }
+        )
+    }
+
+  },
+
+  created() {
+
+    // removido parte do endereço aqui
+
+    this.$http
+      .get('v1/fotos')
+      .then(res => res.json())
+      .then(fotos => this.fotos = fotos, err => console.log(err));
+  }
 }
 </script>
 <style>
@@ -84,17 +102,12 @@ export default {
     text-align: center;
   }
 
-
   .lista-fotos {
     list-style: none;
   }
 
   .lista-fotos .lista-fotos-item {
     display: inline-block;
-  }
-
-  .imagem-responsiva {
-    width: 100%;
   }
 
   .filtro {

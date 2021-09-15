@@ -12,10 +12,15 @@ import './directives/Transform';
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-  routes : routes
+  routes, 
+  mode: 'history'
 });
 
 Vue.use(VueResource);
+
+// http usará sempre o endereço abaixo
+
+Vue.http.options.root = 'http://localhost:3000';
 
 new Vue({
   el: '#app',
