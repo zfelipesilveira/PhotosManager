@@ -1,15 +1,13 @@
 <!-- alurapic/src/App.vue -->
 <template>
 
-  <div>
-    <h1>{{ titulo }}</h1>
+  <div class="corpo">
+    <h1 class="centralizado">{{ titulo }}</h1>
 
-    <ul>
-
-      <li v-for="foto of fotos">
+    <ul class="lista-fotos">
+      <li class="lista-fotos-item" v-for="foto of fotos">
         <img :src="foto.url" :alt="foto.titulo">
       </li>
-
     </ul>
 
   </div>
