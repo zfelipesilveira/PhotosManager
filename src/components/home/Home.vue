@@ -10,6 +10,11 @@
           <li class="lista-fotos-item" v-for="foto of fotosComFiltro">
               <meu-painel :titulo="foto.titulo">
                 <imagem-responsiva :url="foto.url" :titulo="foto.titulo" v-meu-transform:scale.animate="1.2"/>
+                <router-link :to="{ name: 'cadastro'}">
+                  <meu-botao 
+                    rotulo="Alterar" 
+                    tipo="button"/>
+                </router-link> 
                 <meu-botao 
                   rotulo="remover" 
                   tipo="button" 
@@ -27,6 +32,7 @@
 import Painel from '../shared/painel/Painel.vue';
 import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
 import Botao from '../shared/botao/Botao.vue';
+import FotoService from '../../domain/foto/FotoService';
 
 export default {
 
@@ -66,10 +72,8 @@ export default {
 
     remove(foto) {
 
-      // a chave do objeto é o parâmetro usando no endereço do recurso 
-
-      this.resource
-        .delete({id: foto._id})
+      this.service
+        .apaga(foto._id)
         .then(
           () => {
             let indice = this.fotos.indexOf(foto);
@@ -87,13 +91,11 @@ export default {
 
   created() {
 
-    // parametrizando o endereço
+    // criando uma instância do nosso serviço que depende de $resource
+    this.service = new FotoService(this.$resource);
 
-    this.resource = this.$resource('v1/fotos{/id}');
-
-    this.resource
-      .query()
-      .then(res => res.json())
+    this.service
+      .lista()
       .then(fotos => this.fotos = fotos, err => console.log(err));
   }
 }
