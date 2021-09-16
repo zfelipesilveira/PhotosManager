@@ -1,4 +1,4 @@
-# alurapic
+# PhotosManager
 
 > A Vue.js project
 
